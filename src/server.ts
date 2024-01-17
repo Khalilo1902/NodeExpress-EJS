@@ -1,23 +1,19 @@
 import express from 'express';
+import * as config from './config';
+import path from 'path';
+import * as model from './model';
 
 const app = express();
-const port = 4115;
+const baseDir = process.cwd();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(baseDir, '/src/views'));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-	res.send(`
-<html>
-	<head>
-		<title>Info Site</title>
-	</head>
-	<body>
-		<h1>Info Site</h1>
-		<p>Welcome to this site.</p>
-	</body>
-</html>
-	`);
-})
+	res.render('pages/welcome', {title: 'The Welcome Page', books: model.getBooks()});
+});
 
-
-app.listen(port, () => {
-	console.log(`Listening at http://localhost:${port}`);
+app.listen(config.getPort(), () => {
+	console.log(`Listening at http://localhost:${config.getPort()}`);
 });
